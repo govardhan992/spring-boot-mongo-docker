@@ -7,6 +7,7 @@ pipeline {
         stage('check out'){
             steps {
                 git 'https://github.com/govardhan992/java-web-app-docker.git'
+                sh 'ls -l'
             }
         }
         stage('build'){
