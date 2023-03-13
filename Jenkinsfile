@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('check out'){
             steps {
-                git 'https://github.com/govardhan992/java-web-app-docker.git'
+                git 'https://github.com/govardhan992/spring-boot-mongo-docker.git'
                 sh 'ls -l'
             }
         }
