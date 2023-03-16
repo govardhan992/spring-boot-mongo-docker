@@ -17,7 +17,7 @@ pipeline {
         }
          stage('build the docker image'){
             steps {
-                sh "docker build -t govardhanr992/spring-boot-mongo:${BUILD_NUMBER} ."
+                sh "docker build -t govardhanr992/spring-boot-mongo ."
             }
         }
         stage("push docker image"){
@@ -26,7 +26,7 @@ pipeline {
                 
                sh "docker login -u govardhanr992 -p ${docker_hub_pwd}"
      }
-                sh "docker push govardhanr992/spring-boot-mongo:${BUILD_NUMBER}"
+                sh "docker push govardhanr992/spring-boot-mongo"
             }
         }
          // Remove local image in Jenkins Server
