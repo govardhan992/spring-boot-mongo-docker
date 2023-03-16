@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+     tools {
+          maven 'maven 3.9.0' 
+    }
+    stages {
+        stage('check out'){
+            steps {
+                git 'https://github.com/govardhan992/spring-boot-mongo-docker.git'
+                sh 'ls -l'
+            }
+        }
+        stage('build'){
+            steps {
+                sh "mvn clean package"
+            }
+        }
+         stage('build the docker image'){
+            steps {
+                sh "docker build -t govardhanr992/spring-boot-mongo:${BUILD_NUMBER} ."
+            }
+        }
+        stage("push docker image"){
+            steps {
+               withCredentials([string(credentialsId: 'docker_hub_pwd', variable: 'docker_hub_pwd')]) {
+                
+               sh "docker login -u govardhanr992 -p ${docker_hub_pwd}"
+     }
+                sh "docker push govardhanr992/spring-boot-mongo:${BUILD_NUMBER}"
+            }
+        }
+         // Remove local image in Jenkins Server
+    stage("Remove Local Image"){
+        steps {
+        sh "docker rmi -f dockerhandson/spring-boot-mongo"
+        }
+        }
+        stage('kubernates'){
+          steps{
+          withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+            
+               sh 'kubectl apply -f springBootMongo.yml'
+        }
+          }
+          }
+     }
+    }
